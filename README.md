@@ -60,6 +60,7 @@ Data should be in a structured format, such as a CSV or Excel file, containing q
     tokenizer.padding_side = "right"
 
 We load the GPT-2 model and its tokenizer. We use 4-bit quantization to reduce the model's memory footprint, making it easier to fine-tune even on limited hardware.
+
 Why use 4-bit quantization?
 * Reduces memory usage, allowing for the fine-tuning of large models on smaller GPUs.
 
@@ -74,9 +75,9 @@ Why use 4-bit quantization?
 Here we specify the training parameters:
 * Output Directory: Where the model checkpoints and logs are saved.
 * Batch Size: The number of samples processed before the model's internal parameters are updated. We use 4 to balance between speed and memory usage.
-* Max Steps: The maximum number of training steps. We use 10,000 to allow the model enough time to learn from the data.
-* Save Steps: How often to save the model. We save every 250 steps to ensure we have frequent checkpoints.
-* Logging Steps: How often to log the progress.
+* Max Steps: This parameter defines the maximum number of training steps the model will go through. A "step" typically refers to a forward and backward pass using a batch of data. We use 10,000 to allow the model enough time to learn from the data.
+* Save Steps: This parameter determines how often (in terms of training steps) the model's state is saved to disk. For example, if save_steps=200, the model will be saved every 200 steps.
+* Logging Steps: This parameter specifies how often the training logs (e.g., loss, accuracy) are written out during training. For example, if logging_steps=100, logs will be generated every 100 steps.
 * Learning Rate: The rate at which the model learns. We use 5e-5, which is a standard value for fine-tuning tasks.
 
 # Fine-Tune the Model with LoRA (Low-Rank Adaptation)
@@ -92,6 +93,6 @@ Here we specify the training parameters:
     llama_sft_trainer.train()
 
 LoRA (Low-Rank Adaptation), which allows us to train efficiently by modifying only a small part of the model:
-* r (rank): We set it to 8, which balances between the complexity of the model's modifications and the memory usage. Lowering this reduces memory use but may impact performance.
+* r (rank): We set it to 8, which balances between the complexity of the model's modifications and the memory usage. Lowering this reduces memory use but may impact performance. If we increase this then the model will capture more complex information but also increases memory usage and computational cost. And if we decrease this the model will more efficient but potentially less expressive or accurate, especially on complex tasks.
 * lora_alpha: Set to 16, this controls the scale of the updates. Lower values mean smaller updates and slower learning, but too high can lead to overfitting.
-* lora_dropout: Set to 0.1 to prevent overfitting by randomly dropping some of the updates during training.
+* lora_dropout: This is a dropout rate applied to the low-rank matrices during training. Dropout is a regularization technique where a percentage of the units (in this case, from the low-rank matrices) are randomly set to zero during training. Set to 0.1 to prevent overfitting by randomly dropping some of the updates during training.
