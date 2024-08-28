@@ -13,7 +13,7 @@ Before starting, ensure you have the following installed:
 Data should be in a structured format, such as a CSV or Excel file, containing questions and answers.
 
 # Step 1: Load and Clean Data
-#code:
+
 import pandas as pd
 
 file_path = '/content/path'
@@ -22,8 +22,8 @@ df = pd.read_excel(file_path)
 cleaned_data = []
 
 for index, row in df.iterrows():
-    questions = row['Question'].split('\n')  #Split multiple questions in one cell
-    answer = row['Answer'].strip()  #Get the corresponding answer
+    questions = row['Question'].split('\n') 
+    answer = row['Answer'].strip() 
 
     for question in questions:
         question = question.strip()  #Clean up any extra whitespace
