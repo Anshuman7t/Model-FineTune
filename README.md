@@ -82,15 +82,15 @@ Here we specify the training parameters:
 
 # Fine-Tune the Model with LoRA (Low-Rank Adaptation)
 
-    llama_sft_trainer = SFTTrainer(
-        model=llama_model,
+    sft_trainer = SFTTrainer(
+        model=model,
         args=training_arguments,
         train_dataset=dataset['train'],
-        tokenizer=llama_tokenizer,
+        tokenizer=tokenizer,
         peft_config=LoraConfig(task_type="CAUSAL_LM", r=8, lora_alpha=16, lora_dropout=0.1),
         dataset_text_field="text"
     )
-    llama_sft_trainer.train()
+    sft_trainer.train()
 
 LoRA (Low-Rank Adaptation), which allows us to train efficiently by modifying only a small part of the model:
 * r (rank): We set it to 8, which balances between the complexity of the model's modifications and the memory usage. Lowering this reduces memory use but may impact performance. If we increase this then the model will capture more complex information but also increases memory usage and computational cost. And if we decrease this the model will more efficient but potentially less expressive or accurate, especially on complex tasks.
